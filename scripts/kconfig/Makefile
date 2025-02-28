@@ -3,7 +3,7 @@
 # These targets are used from top-level makefile
 
 PHONY += xconfig gconfig menuconfig config silentoldconfig update-po-config \
-	localmodconfig localyesconfig
+         localmodconfig localyesconfig
 
 ifdef KBUILD_KCONFIG
 Kconfig := $(KBUILD_KCONFIG)
@@ -67,8 +67,8 @@ update-po-config: $(obj)/kxgettext $(obj)/gconf.glade.h
 	    $(srctree)/arch/*/um/Kconfig`;               \
 	    do                                           \
 		$(kecho) "  GEN     $$i";                    \
-		$(obj)/kxgettext $$i                     \
-		     >> $(obj)/config.pot;               \
+		$(obj)/kxgettext $$i                         \
+		     >> $(obj)/config.pot;                   \
 	    done )
 	$(Q)$(kecho) "  GEN     linux.pot"
 	$(Q)msguniq --sort-by-file --to-code=UTF-8 $(obj)/config.pot \
@@ -130,29 +130,28 @@ tinyconfig:
 
 # Help text used by make help
 help:
-	@echo  '  config	  - Update current config utilising a line-oriented program'
-	@echo  '  nconfig         - Update current config utilising a ncurses menu based'
-	@echo  '                    program'
-	@echo  '  menuconfig	  - Update current config utilising a menu based program'
-	@echo  '  xconfig	  - Update current config utilising a Qt based front-end'
-	@echo  '  gconfig	  - Update current config utilising a GTK+ based front-end'
-	@echo  '  oldconfig	  - Update current config utilising a provided .config as base'
+	@echo  '  config          - Update current config utilising a line-oriented program'
+	@echo  '  nconfig         - Update current config utilising a ncurses menu based program'
+	@echo  '  menuconfig      - Update current config utilising a menu based program'
+	@echo  '  xconfig         - Update current config utilising a Qt based front-end'
+	@echo  '  gconfig         - Update current config utilising a GTK+ based front-end'
+	@echo  '  oldconfig       - Update current config utilising a provided .config as base'
 	@echo  '  localmodconfig  - Update current config disabling modules not loaded'
 	@echo  '  localyesconfig  - Update current config converting local mods to core'
 	@echo  '  silentoldconfig - Same as oldconfig, but quietly, additionally update deps'
-	@echo  '  defconfig	  - New config with default from ARCH supplied defconfig'
+	@echo  '  defconfig       - New config with default from ARCH supplied defconfig'
 	@echo  '  savedefconfig   - Save current config as ./defconfig (minimal config)'
-	@echo  '  allnoconfig	  - New config where all options are answered with no'
-	@echo  '  allyesconfig	  - New config where all options are accepted with yes'
-	@echo  '  allmodconfig	  - New config selecting modules when possible'
+	@echo  '  allnoconfig     - New config where all options are answered with no'
+	@echo  '  allyesconfig    - New config where all options are accepted with yes'
+	@echo  '  allmodconfig    - New config selecting modules when possible'
 	@echo  '  alldefconfig    - New config with all symbols set to default'
-	@echo  '  randconfig	  - New config with random answer to all options'
+	@echo  '  randconfig      - New config with random answer to all options'
 	@echo  '  listnewconfig   - List new options'
-	@echo  '  olddefconfig	  - Same as silentoldconfig but sets new symbols to their'
+	@echo  '  olddefconfig    - Same as silentoldconfig but sets new symbols to their'
 	@echo  '                    default value'
-	@echo  '  kvmconfig	  - Enable additional options for kvm guest kernel support'
+	@echo  '  kvmconfig       - Enable additional options for kvm guest kernel support'
 	@echo  '  xenconfig       - Enable additional options for xen dom0 and guest kernel support'
-	@echo  '  tinyconfig	  - Configure the tiniest possible kernel'
+	@echo  '  tinyconfig      - Configure the tiniest possible kernel'
 
 # lxdialog stuff
 check-lxdialog  := $(srctree)/$(src)/lxdialog/check-lxdialog.sh
@@ -178,19 +177,19 @@ HOST_EXTRACFLAGS += $(shell $(CONFIG_SHELL) $(check-lxdialog) -ccflags) \
 lxdialog := lxdialog/checklist.o lxdialog/util.o lxdialog/inputbox.o
 lxdialog += lxdialog/textbox.o lxdialog/yesno.o lxdialog/menubox.o
 
-conf-objs	:= conf.o  zconf.tab.o
+conf-objs      := conf.o  zconf.tab.o
 mconf-objs     := mconf.o zconf.tab.o $(lxdialog)
 nconf-objs     := nconf.o zconf.tab.o nconf.gui.o
-kxgettext-objs	:= kxgettext.o zconf.tab.o
-qconf-cxxobjs	:= qconf.o
-qconf-objs	:= zconf.tab.o
-gconf-objs	:= gconf.o zconf.tab.o
+kxgettext-objs := kxgettext.o zconf.tab.o
+qconf-cxxobjs  := qconf.o
+qconf-objs     := zconf.tab.o
+gconf-objs     := gconf.o zconf.tab.o
 
 hostprogs-y := conf nconf mconf kxgettext qconf gconf
 
-clean-files	:= qconf.moc .tmp_qtcheck .tmp_gtkcheck
-clean-files	+= zconf.tab.c zconf.lex.c zconf.hash.c gconf.glade.h
-clean-files     += config.pot linux.pot
+clean-files := qconf.moc .tmp_qtcheck .tmp_gtkcheck
+clean-files += zconf.tab.c zconf.lex.c zconf.hash.c gconf.glade.h
+clean-files += config.pot linux.pot
 
 # Check that we have the required ncurses stuff installed for lxdialog (menuconfig)
 PHONY += $(obj)/dochecklxdialog
@@ -204,25 +203,25 @@ always := dochecklxdialog
 HOST_EXTRACFLAGS += $(shell $(CONFIG_SHELL) $(srctree)/$(src)/check.sh $(HOSTCC) $(HOSTCFLAGS))
 
 # generated files seem to need this to find local include files
-HOSTCFLAGS_zconf.lex.o	:= -I$(src)
-HOSTCFLAGS_zconf.tab.o	:= -I$(src)
+HOSTCFLAGS_zconf.lex.o := -I$(src)
+HOSTCFLAGS_zconf.tab.o := -I$(src)
 
-LEX_PREFIX_zconf	:= zconf
-YACC_PREFIX_zconf	:= zconf
+LEX_PREFIX_zconf  := zconf
+YACC_PREFIX_zconf := zconf
 
-HOSTLOADLIBES_qconf	= $(KC_QT_LIBS)
-HOSTCXXFLAGS_qconf.o	= $(KC_QT_CFLAGS)
+HOSTLOADLIBES_qconf  = $(KC_QT_LIBS)
+HOSTCXXFLAGS_qconf.o = $(KC_QT_CFLAGS)
 
-HOSTLOADLIBES_gconf	= `pkg-config --libs gtk+-2.0 gmodule-2.0 libglade-2.0`
-HOSTCFLAGS_gconf.o	= `pkg-config --cflags gtk+-2.0 gmodule-2.0 libglade-2.0` \
+HOSTLOADLIBES_gconf = `pkg-config --libs gtk+-2.0 gmodule-2.0 libglade-2.0`
+HOSTCFLAGS_gconf.o  = `pkg-config --cflags gtk+-2.0 gmodule-2.0 libglade-2.0` \
                           -Wno-missing-prototypes
 
-HOSTLOADLIBES_mconf   = $(shell $(CONFIG_SHELL) $(check-lxdialog) -ldflags $(HOSTCC))
+HOSTLOADLIBES_mconf = $(shell $(CONFIG_SHELL) $(check-lxdialog) -ldflags $(HOSTCC))
 
-HOSTLOADLIBES_nconf	= $(shell \
-				pkg-config --libs menuw panelw ncursesw 2>/dev/null \
-				|| pkg-config --libs menu panel ncurses 2>/dev/null \
-				|| echo "-lmenu -lpanel -lncurses"  )
+HOSTLOADLIBES_nconf = $(shell \
+                            pkg-config --libs menuw panelw ncursesw 2>/dev/null \
+                            || pkg-config --libs menu panel ncurses 2>/dev/null \
+                            || echo "-lmenu -lpanel -lncurses"  )
 $(obj)/qconf.o: $(obj)/.tmp_qtcheck
 
 ifeq ($(MAKECMDGOALS),xconfig)
@@ -259,22 +258,22 @@ ifeq ($(MAKECMDGOALS),gconfig)
 
 # GTK+ needs some extra effort, too...
 $(obj)/.tmp_gtkcheck:
-	@if `pkg-config --exists gtk+-2.0 gmodule-2.0 libglade-2.0`; then		\
-		if `pkg-config --atleast-version=2.0.0 gtk+-2.0`; then			\
-			touch $@;								\
-		else									\
-			echo >&2 "*"; 							\
-			echo >&2 "* GTK+ is present but version >= 2.0.0 is required.";	\
-			echo >&2 "*";							\
-			false;								\
-		fi									\
-	else										\
-		echo >&2 "*"; 								\
-		echo >&2 "* Unable to find the GTK+ installation. Please make sure that"; 	\
-		echo >&2 "* the GTK+ 2.0 development package is correctly installed..."; 	\
-		echo >&2 "* You need gtk+-2.0, glib-2.0 and libglade-2.0."; 		\
-		echo >&2 "*"; 								\
-		false;									\
+	@if `pkg-config --exists gtk+-2.0 gmodule-2.0 libglade-2.0`; then                 \
+		if `pkg-config --atleast-version=2.0.0 gtk+-2.0`; then                        \
+			touch $@;                                                                 \
+		else                                                                          \
+			echo >&2 "*";                                                             \
+			echo >&2 "* GTK+ is present but version >= 2.0.0 is required.";           \
+			echo >&2 "*";                                                             \
+			false;                                                                    \
+		fi                                                                            \
+	else                                                                              \
+		echo >&2 "*";                                                                 \
+		echo >&2 "* Unable to find the GTK+ installation. Please make sure that";     \
+		echo >&2 "* the GTK+ 2.0 development package is correctly installed...";      \
+		echo >&2 "* You need gtk+-2.0, glib-2.0 and libglade-2.0.";                   \
+		echo >&2 "*";                                                                 \
+		false;                                                                        \
 	fi
 endif
 

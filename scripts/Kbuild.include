@@ -41,10 +41,10 @@ kecho := $($(quiet)kecho)
 # filechk is used to check if the content of a generated file is updated.
 # Sample usage:
 # define filechk_sample
-#	echo $KERNELRELEASE
+#  echo $KERNELRELEASE
 # endef
 # version.h : Makefile
-#	$(call filechk,sample)
+#  $(call filechk,sample)
 # The rule defined shall write to stdout the content of the new file.
 # The existing file will be compared with the new one.
 # - If no file exist it is created
@@ -53,15 +53,15 @@ kecho := $($(quiet)kecho)
 # - stdin is piped in from the first prerequisite ($<) so one has
 #   to specify a valid file as first prerequisite (often the kbuild file)
 define filechk
-	$(Q)set -e;				\
-	$(kecho) '  CHK     $@';		\
-	mkdir -p $(dir $@);			\
-	$(filechk_$(1)) < $< > $@.tmp;		\
-	if [ -r $@ ] && cmp -s $@ $@.tmp; then	\
-		rm -f $@.tmp;			\
-	else					\
-		$(kecho) '  UPD     $@';	\
-		mv -f $@.tmp $@;		\
+	$(Q)set -e;                                   \
+	$(kecho) '  CHK     $@';                      \
+	mkdir -p $(dir $@);                           \
+	$(filechk_$(1)) < $< > $@.tmp;                \
+	if [ -r $@ ] && cmp -s $@ $@.tmp; then        \
+		rm -f $@.tmp;                             \
+	else                                          \
+		$(kecho) '  UPD     $@';                  \
+		mv -f $@.tmp $@;                          \
 	fi
 endef
 
@@ -74,10 +74,10 @@ endef
 # Return first prefix where a prefix$(CC) is found in PATH.
 # If no $(CC) found in PATH with listed prefixes return nothing
 cc-cross-prefix =  \
-	$(word 1, $(foreach c,$(1),                                   \
+	$(word 1, $(foreach c,$(1),                               \
 		$(shell set -e;                                       \
 		if (which $(strip $(c))$(CC)) > /dev/null 2>&1 ; then \
-			echo $(c);                                    \
+			echo $(c);                                        \
 		fi)))
 
 # output directory for tests below
@@ -87,13 +87,13 @@ TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
 # Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
 # Exit code chooses option. "$$TMP" is can be used as temporary file and
 # is automatically cleaned up.
-try-run = $(shell set -e;		\
-	TMP="$(TMPOUT).$$$$.tmp";	\
-	TMPO="$(TMPOUT).$$$$.o";	\
-	if ($(1)) >/dev/null 2>&1;	\
-	then echo "$(2)";		\
-	else echo "$(3)";		\
-	fi;				\
+try-run = $(shell set -e;                            \
+	TMP="$(TMPOUT).$$$$.tmp";                        \
+	TMPO="$(TMPOUT).$$$$.o";                         \
+	if ($(1)) >/dev/null 2>&1;                       \
+	then echo "$(2)";                                \
+	else echo "$(3)";                                \
+	fi;                                              \
 	rm -f "$$TMP" "$$TMPO")
 
 # as-option
@@ -249,19 +249,19 @@ any-prereq = $(filter-out $(PHONY),$?) $(filter-out $(PHONY) $(wildcard $^),$^)
 
 # Execute command if command has changed or prerequisite(s) are updated.
 #
-if_changed = $(if $(strip $(any-prereq) $(arg-check)),                       \
+if_changed = $(if $(strip $(any-prereq) $(arg-check)),                   \
 	@set -e;                                                             \
 	$(echo-cmd) $(cmd_$(1));                                             \
 	printf '%s\n' 'cmd_$@ := $(make-cmd)' > $(dot-target).cmd, @:)
 
 # Execute the command and also postprocess generated .d dependencies file.
-if_changed_dep = $(if $(strip $(any-prereq) $(arg-check) ),                  \
+if_changed_dep = $(if $(strip $(any-prereq) $(arg-check) ),              \
 	@set -e;                                                             \
 	$(cmd_and_fixdep), @:)
 
 ifndef CONFIG_TRIM_UNUSED_KSYMS
 
-cmd_and_fixdep =                                                             \
+cmd_and_fixdep =                                                         \
 	$(echo-cmd) $(cmd_$(1));                                             \
 	scripts/basic/fixdep $(depfile) $@ '$(make-cmd)' > $(dot-target).tmp;\
 	rm -f $(depfile);                                                    \
@@ -274,7 +274,7 @@ else
 # We disable the depfile generation here, so as not to overwrite the existing
 # depfile while fixdep is parsing it.
 flags_nodeps = $(filter-out -Wp$(comma)-M%, $($(1)))
-ksym_dep_filter =                                                            \
+ksym_dep_filter =                                                        \
 	case "$(1)" in                                                       \
 	  cc_*_c|cpp_i_c)                                                    \
 	    $(CPP) $(call flags_nodeps,c_flags) -D__KSYM_DEPS__ $< ;;        \
@@ -284,11 +284,11 @@ ksym_dep_filter =                                                            \
 	  *) echo "Don't know how to preprocess $(1)" >&2; false ;;          \
 	esac | tr ";" "\n" | sed -rn 's/^.*=== __KSYM_(.*) ===.*$$/KSYM_\1/p'
 
-cmd_and_fixdep =                                                             \
+cmd_and_fixdep =                                                         \
 	$(echo-cmd) $(cmd_$(1));                                             \
 	$(ksym_dep_filter) |                                                 \
-		scripts/basic/fixdep -e $(depfile) $@ '$(make-cmd)'          \
-			> $(dot-target).tmp;	                             \
+		scripts/basic/fixdep -e $(depfile) $@ '$(make-cmd)'              \
+			> $(dot-target).tmp;                                         \
 	rm -f $(depfile);                                                    \
 	mv -f $(dot-target).tmp $(dot-target).cmd;
 
@@ -297,7 +297,7 @@ endif
 # Usage: $(call if_changed_rule,foo)
 # Will check if $(cmd_foo) or any of the prerequisites changed,
 # and if so will execute $(rule_foo).
-if_changed_rule = $(if $(strip $(any-prereq) $(arg-check) ),                 \
+if_changed_rule = $(if $(strip $(any-prereq) $(arg-check) ),             \
 	@set -e;                                                             \
 	$(rule_$(1)), @:)
 

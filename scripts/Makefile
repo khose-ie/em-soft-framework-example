@@ -1,2 +1,2 @@
 # Let clean descend into subdirs
-subdir-	+= basic kconfig
+subdir- += basic kconfig

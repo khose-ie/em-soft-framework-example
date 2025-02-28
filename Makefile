@@ -67,30 +67,30 @@ unexport GREP_OPTIONS
 # Use 'make V=1' to see the full commands
 
 ifeq ("$(origin V)", "command line")
-  KBUILD_VERBOSE = $(V)
+    KBUILD_VERBOSE = $(V)
 endif
 ifndef KBUILD_VERBOSE
-  KBUILD_VERBOSE = 0
+    KBUILD_VERBOSE = 0
 endif
 
 ifeq ($(KBUILD_VERBOSE),1)
-  quiet =
-  Q =
+    quiet =
+    Q =
 else
-  quiet=quiet_
-  Q = @
+    quiet=quiet_
+    Q = @
 endif
 
 # If the user is running make -s (silent mode), suppress echoing of
 # commands
 
-ifneq ($(filter 4.%,$(MAKE_VERSION)),)	# make-4
+ifneq ($(filter 4.%,$(MAKE_VERSION)),)  # make-4
 ifneq ($(filter %s ,$(firstword x$(MAKEFLAGS))),)
-  quiet=silent_
+    quiet=silent_
 endif
-else					# make-3.8x
+else                                    # make-3.8x
 ifneq ($(filter s% -s%,$(MAKEFLAGS)),)
-  quiet=silent_
+    quiet=silent_
 endif
 endif
 
@@ -118,7 +118,7 @@ ifeq ($(KBUILD_SRC),)
 # OK, Make called in directory where kernel src resides
 # Do we want to locate output files in a separate directory?
 ifeq ("$(origin O)", "command line")
-  KBUILD_OUTPUT := $(O)
+    KBUILD_OUTPUT := $(O)
 endif
 
 # That's our default target when none is given on the command line
@@ -129,15 +129,15 @@ _all:
 $(CURDIR)/Makefile Makefile: ;
 
 ifneq ($(words $(subst :, ,$(CURDIR))), 1)
-  $(error main directory cannot contain spaces nor colons)
+    $(error main directory cannot contain spaces nor colons)
 endif
 
 ifneq ($(KBUILD_OUTPUT),)
 # Invoke a second make in the output directory, passing relevant variables
 # check that the output directory actually exists
-saved-output := $(KBUILD_OUTPUT)
+saved-output  := $(KBUILD_OUTPUT)
 KBUILD_OUTPUT := $(shell mkdir -p $(KBUILD_OUTPUT) && cd $(KBUILD_OUTPUT) \
-								&& /bin/pwd)
+                 && /bin/pwd)
 $(if $(KBUILD_OUTPUT),, \
      $(error failed to create output directory "$(saved-output)"))
 
@@ -174,45 +174,45 @@ MAKEFLAGS += --no-print-directory
 # where to get the "sparse" utility.
 
 ifeq ("$(origin C)", "command line")
-  KBUILD_CHECKSRC = $(C)
+    KBUILD_CHECKSRC = $(C)
 endif
 ifndef KBUILD_CHECKSRC
-  KBUILD_CHECKSRC = 0
+    KBUILD_CHECKSRC = 0
 endif
 
 PHONY += all
 _all: all
 
 ifeq ($(KBUILD_SRC),)
-        # building in the source tree
-        srctree := .
+    # building in the source tree
+    srctree := .
 else
-        ifeq ($(KBUILD_SRC)/,$(dir $(CURDIR)))
-                # building in a subdirectory of the source tree
-                srctree := ..
-        else
-                srctree := $(KBUILD_SRC)
-        endif
+    ifeq ($(KBUILD_SRC)/,$(dir $(CURDIR)))
+        # building in a subdirectory of the source tree
+        srctree := ..
+    else
+        srctree := $(KBUILD_SRC)
+    endif
 endif
 
-objtree		:= .
-src		:= $(srctree)
-obj		:= $(objtree)
+objtree := .
+src     := $(srctree)
+obj     := $(objtree)
 
-VPATH		:= $(srctree)
+VPATH := $(srctree)
 
 export srctree objtree VPATH
 
-ARCH		?= $(SUBARCH)
-CROSS_COMPILE	?= $(CONFIG_CROSS_COMPILE:"%"=%)
+ARCH          ?= $(SUBARCH)
+CROSS_COMPILE ?= $(CONFIG_CROSS_COMPILE:"%"=%)
 
-KCONFIG_CONFIG	?= .config
+KCONFIG_CONFIG ?= .config
 export KCONFIG_CONFIG
 
 # SHELL used by kbuild
-CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
-	  else if [ -x /bin/bash ]; then echo /bin/bash; \
-	  else echo sh; fi ; fi)
+CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH;           \
+                        else if [ -x /bin/bash ]; then echo /bin/bash;  \
+                        else echo sh; fi ; fi)
 
 HOSTCC       = gcc
 HOSTCXX      = g++
@@ -220,8 +220,10 @@ HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-p
 HOSTCXXFLAGS = -O2
 
 ifeq ($(shell $(HOSTCC) -v 2>&1 | grep -c "clang version"), 1)
-HOSTCFLAGS  += -Wno-unused-value -Wno-unused-parameter \
-		-Wno-missing-field-initializers -fno-delete-null-pointer-checks
+HOSTCFLAGS += -Wno-unused-value \
+              -Wno-unused-parameter \
+              -Wno-missing-field-initializers \
+              -fno-delete-null-pointer-checks
 endif
 
 # Decide whether to build built-in, modular, or both.
@@ -238,43 +240,46 @@ scripts/Kbuild.include: ;
 include scripts/Kbuild.include
 
 # Make variables (CC, etc...)
-AS		= $(CROSS_COMPILE)as
-LD		= $(CROSS_COMPILE)ld
-CC		= $(CROSS_COMPILE)gcc
-CPP		= $(CC) -E
-AR		= $(CROSS_COMPILE)ar
-NM		= $(CROSS_COMPILE)nm
-STRIP		= $(CROSS_COMPILE)strip
-OBJCOPY		= $(CROSS_COMPILE)objcopy
-OBJDUMP		= $(CROSS_COMPILE)objdump
-AWK		= awk
-PERL		= perl
-PYTHON		= python
-CHECK		= sparse
+AS      = $(CROSS_COMPILE)as
+LD      = $(CROSS_COMPILE)ld
+CC      = $(CROSS_COMPILE)gcc
+CPP     = $(CC) -E
+AR      = $(CROSS_COMPILE)ar
+NM      = $(CROSS_COMPILE)nm
+STRIP   = $(CROSS_COMPILE)strip
+OBJCOPY = $(CROSS_COMPILE)objcopy
+OBJDUMP = $(CROSS_COMPILE)objdump
+AWK     = awk
+PERL    = perl
+PYTHON  = python
+CHECK   = sparse
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
-		  -Wbitwise -Wno-return-void $(CF)
-NOSTDINC_FLAGS  =
-CFLAGS_KERNEL	=
-AFLAGS_KERNEL	=
+                  -Wbitwise -Wno-return-void $(CF)
+NOSTDINC_FLAGS =
+CFLAGS_KERNEL  =
+AFLAGS_KERNEL  =
 
 # Use MYAPPINCLUDE when you must reference the include/ directory.
 # Needed to be compatible with the O= option
-MYAPPINCLUDE    := \
-		$(if $(KBUILD_SRC), -I$(srctree)/include) \
-		-Iinclude -include include/generated/autoconf.h
+MYAPPINCLUDE := $(if $(KBUILD_SRC), -I$(srctree)/include) \
+               -Iinclude -include include/generated/autoconf.h
 
 KBUILD_CPPFLAGS := -D__MYAPP__
 
-KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
-		   -fno-strict-aliasing -fno-common \
-		   -Werror-implicit-function-declaration \
-		   -Wno-format-security \
-		   -std=gnu89
+KBUILD_CFLAGS := -Wall \
+                 -Wundef \
+                 -Wstrict-prototypes \
+                 -Wno-trigraphs \
+                 -Wno-format-security \
+                 -Werror-implicit-function-declaration \
+                 -fno-common \
+                 -fno-strict-aliasing \
+                 -std=gnu89
 
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
-KBUILD_AFLAGS   := -D__ASSEMBLY__
+KBUILD_AFLAGS        := -D__ASSEMBLY__
 
 KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(SUBLEVEL)))$(EXTRAVERSION)
 
@@ -293,10 +298,10 @@ export KBUILD_ARFLAGS
 # Files to ignore in find ... statements
 
 export RCS_FIND_IGNORE := \( -name SCCS -o -name BitKeeper -o -name .svn -o    \
-			  -name CVS -o -name .pc -o -name .hg -o -name .git \) \
-			  -prune -o
+                             -name CVS -o -name .pc -o -name .hg -o -name .git \) \
+                             -prune -o
 export RCS_TAR_IGNORE := --exclude SCCS --exclude BitKeeper --exclude .svn \
-			 --exclude CVS --exclude .pc --exclude .hg --exclude .git
+                         --exclude CVS --exclude .pc --exclude .hg --exclude .git
 
 # ===========================================================================
 # Rules shared between *config targets and build targets
@@ -316,8 +321,7 @@ PHONY += outputmakefile
 outputmakefile:
 ifneq ($(KBUILD_SRC),)
 	$(Q)ln -fsn $(srctree) source
-	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile \
-	    $(srctree) $(objtree) $(VERSION) $(PATCHLEVEL)
+	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile $(srctree) $(objtree) $(VERSION) $(PATCHLEVEL)
 endif
 
 # To make sure we do not include .config for any of the *config targets
@@ -331,18 +335,18 @@ endif
 version_h := include/generated/version.h
 
 no-dot-config-targets := clean mrproper distclean \
-			 cscope help% %docs check% coccicheck \
-			 $(version_h) headers_% archheaders archscripts \
-			 kernelversion %src-pkg
+                         cscope help% %docs check% coccicheck \
+                         $(version_h) headers_% archheaders archscripts \
+                         kernelversion %src-pkg
 
 config-targets := 0
 mixed-targets  := 0
 dot-config     := 1
 
 ifneq ($(filter $(no-dot-config-targets), $(MAKECMDGOALS)),)
-	ifeq ($(filter-out $(no-dot-config-targets), $(MAKECMDGOALS)),)
-		dot-config := 0
-	endif
+    ifeq ($(filter-out $(no-dot-config-targets), $(MAKECMDGOALS)),)
+        dot-config := 0
+    endif
 endif
 
 ifneq ($(filter config %config,$(MAKECMDGOALS)),)
@@ -440,46 +444,47 @@ ARCH_AFLAGS :=
 ARCH_CFLAGS :=
 -include arch/$(ARCH)/Makefile
 
-KBUILD_CFLAGS	+= $(call cc-option,-fno-delete-null-pointer-checks,)
+KBUILD_CFLAGS   += $(call cc-option,-fno-delete-null-pointer-checks,)
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
+KBUILD_CFLAGS   += -Os $(call cc-disable-warning,maybe-uninitialized,)
 else
 ifdef CONFIG_PROFILE_ALL_BRANCHES
-KBUILD_CFLAGS	+= -O2 $(call cc-disable-warning,maybe-uninitialized,)
+KBUILD_CFLAGS   += -O2 $(call cc-disable-warning,maybe-uninitialized,)
 else
 KBUILD_CFLAGS   += -O2
 endif
 endif
 
 # Tell gcc to never replace conditional load with a non-conditional one
-KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
+KBUILD_CFLAGS   += $(call cc-option,--param=allow-store-data-races=0)
 
 ifeq ($(cc-name),clang)
 KBUILD_CPPFLAGS += $(call cc-option,-Qunused-arguments,)
 KBUILD_CPPFLAGS += $(call cc-option,-Wno-unknown-warning-option,)
-KBUILD_CFLAGS += $(call cc-disable-warning, unused-variable)
-KBUILD_CFLAGS += $(call cc-disable-warning, format-invalid-specifier)
-KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+
+KBUILD_CFLAGS   += $(call cc-disable-warning, unused-variable)
+KBUILD_CFLAGS   += $(call cc-disable-warning, format-invalid-specifier)
+KBUILD_CFLAGS   += $(call cc-disable-warning, gnu)
 # Quiet clang warning: comparison of unsigned expression < 0 is always false
-KBUILD_CFLAGS += $(call cc-disable-warning, tautological-compare)
+KBUILD_CFLAGS   += $(call cc-disable-warning, tautological-compare)
 # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
 # source of a reference will be _MergedGlobals and not on of the whitelisted names.
 # See modpost pattern 2
-KBUILD_CFLAGS += $(call cc-option, -mno-global-merge,)
-KBUILD_CFLAGS += $(call cc-option, -fcatch-undefined-behavior)
+KBUILD_CFLAGS   += $(call cc-option, -mno-global-merge,)
+KBUILD_CFLAGS   += $(call cc-option, -fcatch-undefined-behavior)
 else
 
 # These warnings generated too much noise in a regular build.
 # Use make W=1 to enable them (see scripts/Makefile.build)
-KBUILD_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
-KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
+KBUILD_CFLAGS   += $(call cc-disable-warning, unused-but-set-variable)
+KBUILD_CFLAGS   += $(call cc-disable-warning, unused-const-variable)
 endif
 
 ifdef CONFIG_FRAME_POINTER
-KBUILD_CFLAGS	+= -fno-omit-frame-pointer -fno-optimize-sibling-calls
+KBUILD_CFLAGS   += -fno-omit-frame-pointer -fno-optimize-sibling-calls
 else
-KBUILD_CFLAGS	+= -fomit-frame-pointer
+KBUILD_CFLAGS   += -fomit-frame-pointer
 endif
 
 KBUILD_CFLAGS   += $(call cc-option, -fno-var-tracking-assignments)
@@ -488,22 +493,22 @@ ifdef CONFIG_DEBUG_INFO
 ifdef CONFIG_DEBUG_INFO_SPLIT
 KBUILD_CFLAGS   += $(call cc-option, -gsplit-dwarf, -g)
 else
-KBUILD_CFLAGS	+= -g
+KBUILD_CFLAGS   += -g
 endif
-KBUILD_AFLAGS	+= -Wa,-gdwarf-2
+KBUILD_AFLAGS   += -Wa,-gdwarf-2
 endif
 ifdef CONFIG_DEBUG_INFO_DWARF4
-KBUILD_CFLAGS	+= $(call cc-option, -gdwarf-4,)
+KBUILD_CFLAGS   += $(call cc-option, -gdwarf-4,)
 endif
 
 ifdef CONFIG_DEBUG_INFO_REDUCED
-KBUILD_CFLAGS 	+= $(call cc-option, -femit-struct-debug-baseonly) \
-		   $(call cc-option,-fno-var-tracking)
+KBUILD_CFLAGS   += $(call cc-option, -femit-struct-debug-baseonly) \
+                   $(call cc-option,-fno-var-tracking)
 endif
 
 # We trigger additional mismatches with less inlining
 ifdef CONFIG_DEBUG_SECTION_MISMATCH
-KBUILD_CFLAGS += $(call cc-option, -fno-inline-functions-called-once)
+KBUILD_CFLAGS   += $(call cc-option, -fno-inline-functions-called-once)
 endif
 
 # arch Makefile may override CC so keep this after arch Makefile is included
@@ -511,13 +516,13 @@ endif
 CHECKFLAGS     += $(NOSTDINC_FLAGS)
 
 # warn about C99 declaration after statement
-KBUILD_CFLAGS += $(call cc-option,-Wdeclaration-after-statement,)
+KBUILD_CFLAGS   += $(call cc-option,-Wdeclaration-after-statement,)
 
 # disable pointer signed / unsigned warnings in gcc 4.0
-KBUILD_CFLAGS += $(call cc-disable-warning, pointer-sign)
+KBUILD_CFLAGS   += $(call cc-disable-warning, pointer-sign)
 
 # disable invalid "can't wrap" optimizations for signed / pointers
-KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
+KBUILD_CFLAGS   += $(call cc-option,-fno-strict-overflow)
 
 # conserve stack if available
 KBUILD_CFLAGS   += $(call cc-option,-fconserve-stack)
@@ -539,8 +544,8 @@ KBUILD_ARFLAGS := $(call ar-option,D)
 
 # check for 'asm goto'
 ifeq ($(shell $(CONFIG_SHELL) $(srctree)/scripts/gcc-goto.sh $(CC)), y)
-	KBUILD_CFLAGS += -DCC_HAVE_ASM_GOTO
-	KBUILD_AFLAGS += -DCC_HAVE_ASM_GOTO
+    KBUILD_CFLAGS += -DCC_HAVE_ASM_GOTO
+    KBUILD_AFLAGS += -DCC_HAVE_ASM_GOTO
 endif
 
 include scripts/Makefile.extrawarn
@@ -561,16 +566,16 @@ export KBUILD_IMAGE ?= myapp
 #
 # INSTALL_PATH specifies where to place the updated kernel and system map
 # images. Default is /boot, but you can set it to other values
-export	INSTALL_PATH ?= ./install
+export INSTALL_PATH ?= ./install
 
 
-objs-y		:= main
-libs-y		:= lib
+objs-y := main
+libs-y := lib
 
-myapp-dirs	:= $(objs-y) $(libs-y)
-myapp-objs	:= $(patsubst %,%/built-in.o, $(objs-y))
-myapp-libs	:= $(patsubst %,%/lib.a, $(libs-y))
-myapp-all	:= $(myapp-objs) $(myapp-libs)
+myapp-dirs := $(objs-y) $(libs-y)
+myapp-objs := $(patsubst %,%/built-in.o, $(objs-y))
+myapp-libs := $(patsubst %,%/lib.a, $(libs-y))
+myapp-all  := $(myapp-objs) $(myapp-libs)
 
 quiet_cmd_myapp = LD      $@
       cmd_myapp = $(CC) $(LDFLAGS) -o $@                          \
@@ -592,8 +597,6 @@ $(sort $(myapp-all)): $(myapp-dirs) ;
 PHONY += $(myapp-dirs)
 $(myapp-dirs): prepare scripts
 	$(Q)$(MAKE) $(build)=$@
-
-
 
 # Things we need to do before we recursively start building the application
 # are listed in "prepare".
@@ -659,12 +662,12 @@ headerdep:
 
 # Directories & files removed with 'make clean'
 CLEAN_DIRS  +=
-CLEAN_FILES +=	myapp
+CLEAN_FILES += myapp
 
 # Directories & files removed with 'make mrproper'
 MRPROPER_DIRS  += include/config include/generated .tmp_objdiff
 MRPROPER_FILES += .config .config.old .version .old_version \
-		  cscope* GPATH GSYMS
+                  cscope* GPATH GSYMS
 
 # clean - Delete most
 #
@@ -720,21 +723,21 @@ clean := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.clean obj
 PHONY += help
 help:
 	@echo  'Cleaning targets:'
-	@echo  '  clean		  - Remove most generated files but keep the config'
-	@echo  '  mrproper	  - Remove all generated files + config + various backup files'
-	@echo  '  distclean	  - mrproper + remove editor backup and patch files'
+	@echo  '  clean       - Remove most generated files but keep the config'
+	@echo  '  mrproper    - Remove all generated files + config + various backup files'
+	@echo  '  distclean   - mrproper + remove editor backup and patch files'
 	@echo  ''
 	@echo  'Configuration targets:'
 	@$(MAKE) -f $(srctree)/scripts/kconfig/Makefile help
 	@echo  ''
 	@echo  'Other generic targets:'
-	@echo  '  all		  - Build all targets marked with [*]'
-	@echo  '* myapp		  - Build the application'
+	@echo  '  all             - Build all targets marked with [*]'
+	@echo  '* myapp           - Build the application'
 	@echo  '  dir/            - Build all files in dir and below'
 	@echo  '  dir/file.[ois]  - Build specified target only'
 	@echo  '  dir/file.lst    - Build specified mixed source/assembly target only'
 	@echo  '                    (requires a recent binutils and recent build (System.map))'
-	@echo  '  kernelversion	  - Output the version stored in Makefile (use with make -s)'
+	@echo  '  kernelversion   - Output the version stored in Makefile (use with make -s)'
 	 echo  ''
 	@echo  'Static analysers'
 	@echo  '  includecheck    - Check for duplicate included header files'
@@ -746,9 +749,9 @@ help:
 	@echo  '  make C=1   [targets] Check all c source with $$CHECK (sparse by default)'
 	@echo  '  make C=2   [targets] Force check of all c source with $$CHECK'
 	@echo  '  make W=n   [targets] Enable extra gcc checks, n=1,2,3 where'
-	@echo  '		1: warnings which may be relevant and do not occur too often'
-	@echo  '		3: more obscure warnings, can most likely be ignored'
-	@echo  '		Multiple levels can be combined with W=12 or W=123'
+	@echo  '        1: warnings which may be relevant and do not occur too often'
+	@echo  '        3: more obscure warnings, can most likely be ignored'
+	@echo  '        Multiple levels can be combined with W=12 or W=123'
 	@echo  ''
 	@echo  'Execute "make" or "make all" to build all targets marked with [*] '
 	@echo  'For further info see the ./README file'
@@ -818,11 +821,11 @@ targets := $(wildcard $(sort $(targets)))
 cmd_files := $(wildcard .*.cmd $(foreach f,$(targets),$(dir $(f)).$(notdir $(f)).cmd))
 
 ifneq ($(cmd_files),)
-  $(cmd_files): ;	# Do not try to update included dependency files
-  include $(cmd_files)
+    $(cmd_files): ;	# Do not try to update included dependency files
+    include $(cmd_files)
 endif
 
-endif	# skip-makefile
+endif # skip-makefile
 
 PHONY += FORCE
 FORCE:

@@ -15,10 +15,10 @@ test ! -r $2/Makefile -o -O $2/Makefile || exit 0
 # (so we do not overwrite kernel Makefile)
 if test -e $2/Makefile && ! grep -q Automatically $2/Makefile
 then
-	exit 0
+    exit 0
 fi
 if [ "${quiet}" != "silent_" ]; then
-	echo "  GEN     $2/Makefile"
+    echo "  GEN     $2/Makefile"
 fi
 
 cat << EOF > $2/Makefile

@@ -23,13 +23,13 @@ lib-y := $(filter-out $(obj-y), $(sort $(lib-y)))
 # o if we encounter foo/ in $(obj-y), replace it by foo/built-in.o
 #   and add the directory to the list of dirs to descend into: $(subdir-y)
 
-__subdir-y	:= $(patsubst %/,%,$(filter %/, $(obj-y)))
-subdir-y	+= $(__subdir-y)
-obj-y		:= $(patsubst %/, %/built-in.o, $(obj-y))
+__subdir-y  := $(patsubst %/,%,$(filter %/, $(obj-y)))
+subdir-y    += $(__subdir-y)
+obj-y       := $(patsubst %/, %/built-in.o, $(obj-y))
 
 # Subdirectories we need to descend into
 
-subdir-ym      := $(sort $(subdir-y))
+subdir-ym    := $(sort $(subdir-y))
 
 # if $(foo-objs) exists, foo.o is a composite object
 multi-used-y := $(sort $(foreach m,$(obj-y), $(if $(strip $($(m:.o=-objs)) $($(m:.o=-y))), $(m))))
@@ -45,24 +45,24 @@ multi-objs   := $(multi-objs-y)
 subdir-obj-y := $(filter %/built-in.o, $(obj-y))
 
 # $(obj-dirs) is a list of directories that contain object files
-obj-dirs := $(dir $(obj-y))
+obj-dirs     := $(dir $(obj-y))
 
 # Replace multi-part objects by their individual parts, look at local dir only
-real-objs-y := $(foreach m, $(filter-out $(subdir-obj-y), $(obj-y)), $(if $(strip $($(m:.o=-objs)) $($(m:.o=-y))),$($(m:.o=-objs)) $($(m:.o=-y)),$(m))) $(extra-y)
+real-objs-y  := $(foreach m, $(filter-out $(subdir-obj-y), $(obj-y)), $(if $(strip $($(m:.o=-objs)) $($(m:.o=-y))),$($(m:.o=-objs)) $($(m:.o=-y)),$(m))) $(extra-y)
 
 # Add subdir path
 
-extra-y		:= $(addprefix $(obj)/,$(extra-y))
-always		:= $(addprefix $(obj)/,$(always))
-targets		:= $(addprefix $(obj)/,$(targets))
-obj-y		:= $(addprefix $(obj)/,$(obj-y))
-lib-y		:= $(addprefix $(obj)/,$(lib-y))
-subdir-obj-y	:= $(addprefix $(obj)/,$(subdir-obj-y))
-real-objs-y	:= $(addprefix $(obj)/,$(real-objs-y))
-multi-used-y   := $(addprefix $(obj)/,$(multi-used-y))
-multi-objs-y   := $(addprefix $(obj)/,$(multi-objs-y))
-subdir-ym	:= $(addprefix $(obj)/,$(subdir-ym))
-obj-dirs	:= $(addprefix $(obj)/,$(obj-dirs))
+extra-y      := $(addprefix $(obj)/,$(extra-y))
+always       := $(addprefix $(obj)/,$(always))
+targets      := $(addprefix $(obj)/,$(targets))
+obj-y        := $(addprefix $(obj)/,$(obj-y))
+lib-y        := $(addprefix $(obj)/,$(lib-y))
+subdir-obj-y := $(addprefix $(obj)/,$(subdir-obj-y))
+real-objs-y  := $(addprefix $(obj)/,$(real-objs-y))
+multi-used-y := $(addprefix $(obj)/,$(multi-used-y))
+multi-objs-y := $(addprefix $(obj)/,$(multi-objs-y))
+subdir-ym    := $(addprefix $(obj)/,$(subdir-ym))
+obj-dirs     := $(addprefix $(obj)/,$(obj-dirs))
 
 orig_c_flags   = $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) $(KBUILD_SUBDIR_CCFLAGS) \
                  $(ccflags-y) $(CFLAGS_$(basetarget).o)
@@ -77,30 +77,30 @@ _cpp_flags     = $(KBUILD_CPPFLAGS) $(cppflags-y) $(CPPFLAGS_$(@F))
 # of -Idir to -I$(srctree)/dir except for absolute paths (starting with '/').
 
 ifeq ($(KBUILD_SRC),)
-__c_flags	= $(_c_flags)
-__a_flags	= $(_a_flags)
-__cpp_flags     = $(_cpp_flags)
+__c_flags   = $(_c_flags)
+__a_flags   = $(_a_flags)
+__cpp_flags = $(_cpp_flags)
 else
 
 # -I$(obj) locates generated .h files
 # $(call addtree,-I$(obj)) locates .h files in srctree, from generated .c files
 #   and locates generated .h files
 # FIXME: Replace both with specific CFLAGS* statements in the makefiles
-__c_flags	= $(call addtree,-I$(obj)) $(call flags,_c_flags)
-__a_flags	=                          $(call flags,_a_flags)
-__cpp_flags     =                          $(call flags,_cpp_flags)
+__c_flags   = $(call addtree,-I$(obj)) $(call flags,_c_flags)
+__a_flags   =                          $(call flags,_a_flags)
+__cpp_flags =                          $(call flags,_cpp_flags)
 endif
 
-c_flags        = -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(MYAPPINCLUDE)     \
-		 $(__c_flags) $(modkern_cflags)
+c_flags   = -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(MYAPPINCLUDE)     \
+            $(__c_flags) $(modkern_cflags)
 
-a_flags        = -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(MYAPPINCLUDE)     \
-		 $(__a_flags) $(modkern_aflags)
+a_flags   = -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(MYAPPINCLUDE)     \
+            $(__a_flags) $(modkern_aflags)
 
-cpp_flags      = -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(MYAPPINCLUDE)     \
-		 $(__cpp_flags)
+cpp_flags = -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(MYAPPINCLUDE)     \
+            $(__cpp_flags)
 
-ld_flags       = $(LDFLAGS) $(ldflags-y)
+ld_flags  = $(LDFLAGS) $(ldflags-y)
 
 # Useful for describing the dependency of composite objects
 # Usage:
@@ -165,20 +165,20 @@ $(obj)/%: $(src)/%_shipped
 # Commands useful for building a boot image
 # ===========================================================================
 #
-#	Use as following:
+#   Use as following:
 #
-#	target: source(s) FORCE
-#		$(if_changed,ld/objcopy/gzip)
+#   target: source(s) FORCE
+#       $(if_changed,ld/objcopy/gzip)
 #
-#	and add target to extra-y so that we know we have to
-#	read in the saved command line
+#   and add target to extra-y so that we know we have to
+#   read in the saved command line
 
 # Linking
 # ---------------------------------------------------------------------------
 
 quiet_cmd_ld = LD      $@
 cmd_ld = $(LD) $(LDFLAGS) $(ldflags-y) $(LDFLAGS_$(@F)) \
-	       $(filter-out FORCE,$^) -o $@
+         $(filter-out FORCE,$^) -o $@
 
 # Objcopy
 # ---------------------------------------------------------------------------
@@ -198,19 +198,19 @@ cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -n -f -9 > $@) || \
 
 # Bzip2 and LZMA do not include size in file... so we have to fake that;
 # append the size as a 32-bit littleendian number as gzip does.
-size_append = printf $(shell						\
-dec_size=0;								\
-for F in $1; do								\
-	fsize=$$(stat -c "%s" $$F);					\
-	dec_size=$$(expr $$dec_size + $$fsize);				\
-done;									\
-printf "%08x\n" $$dec_size |						\
-	sed 's/\(..\)/\1 /g' | {					\
-		read ch0 ch1 ch2 ch3;					\
-		for ch in $$ch3 $$ch2 $$ch1 $$ch0; do			\
-			printf '%s%03o' '\\' $$((0x$$ch)); 		\
-		done;							\
-	}								\
+size_append = printf $(shell                                           \
+dec_size=0;                                                            \
+for F in $1; do                                                        \
+	fsize=$$(stat -c "%s" $$F);                                        \
+	dec_size=$$(expr $$dec_size + $$fsize);                            \
+done;                                                                  \
+printf "%08x\n" $$dec_size |                                           \
+	sed 's/\(..\)/\1 /g' | {                                           \
+		read ch0 ch1 ch2 ch3;                                          \
+		for ch in $$ch3 $$ch2 $$ch1 $$ch0; do                          \
+			printf '%s%03o' '\\' $$((0x$$ch));                         \
+		done;                                                          \
+	}                                                                  \
 )
 
 quiet_cmd_bzip2 = BZIP2   $@
@@ -255,10 +255,10 @@ UIMAGE_OUT ?= $@
 
 quiet_cmd_uimage = UIMAGE  $(UIMAGE_OUT)
       cmd_uimage = $(CONFIG_SHELL) $(MKIMAGE) -A $(UIMAGE_ARCH) -O linux \
-			-C $(UIMAGE_COMPRESSION) $(UIMAGE_OPTS-y) \
-			-T $(UIMAGE_TYPE) \
-			-a $(UIMAGE_LOADADDR) -e $(UIMAGE_ENTRYADDR) \
-			-n $(UIMAGE_NAME) -d $(UIMAGE_IN) $(UIMAGE_OUT)
+                  -C $(UIMAGE_COMPRESSION) $(UIMAGE_OPTS-y) \
+                  -T $(UIMAGE_TYPE) \
+                  -a $(UIMAGE_LOADADDR) -e $(UIMAGE_ENTRYADDR) \
+                  -n $(UIMAGE_NAME) -d $(UIMAGE_IN) $(UIMAGE_OUT)
 
 # XZ
 # ---------------------------------------------------------------------------
