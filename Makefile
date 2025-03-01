@@ -250,6 +250,7 @@ NM      = $(CROSS_COMPILE)nm
 STRIP   = $(CROSS_COMPILE)strip
 OBJCOPY = $(CROSS_COMPILE)objcopy
 OBJDUMP = $(CROSS_COMPILE)objdump
+OBJSIZE = $(CROSS_COMPILE)size
 AWK     = awk
 PERL    = perl
 PYTHON  = python
@@ -293,7 +294,7 @@ KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(S
 
 export VERSION PATCHLEVEL SUBLEVEL KERNELVERSION
 export ARCH CONFIG_SHELL HOSTCC HOSTCFLAGS CROSS_COMPILE AS LD CC CXX
-export CPP AR NM STRIP OBJCOPY OBJDUMP
+export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE
 export MAKE AWK PERL PYTHON
 export HOSTCXX HOSTCXXFLAGS CHECK CHECKFLAGS
 
@@ -613,8 +614,10 @@ app-libs := $(patsubst %,%/lib.a, $(libs-y))
 app-all  := $(app-objs) $(app-libs)
 
 quiet_cmd_app = LD      $@
-      cmd_app = $(CC) $(LDFLAGS) -o $@                          \
-      -Wl,--start-group $(app-libs) $(app-objs) -Wl,--end-group
+      cmd_app = $(CC) $(LDFLAGS) -o $@ -Wl,--start-group $(app-libs) $(app-objs) -Wl,--end-group    && \
+	            echo "============================================================"                 && \
+	            $(OBJSIZE) $@                                                                       && \
+				$(OBJCOPY) -O binary -S $@ $@.bin
 
 application: $(app-all) FORCE
 	+$(call if_changed,app)
@@ -699,7 +702,7 @@ headerdep:
 
 # Directories & files removed with 'make clean'
 CLEAN_DIRS  +=
-CLEAN_FILES += application
+CLEAN_FILES += application application.bin
 
 # Directories & files removed with 'make mrproper'
 MRPROPER_DIRS  += include/config include/generated .tmp_objdiff
