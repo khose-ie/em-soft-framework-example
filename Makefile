@@ -763,9 +763,9 @@ clean := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.clean obj
 PHONY += help
 help:
 	@echo  'Cleaning targets:'
-	@echo  '  clean       - Remove most generated files but keep the config'
-	@echo  '  mrproper    - Remove all generated files + config + various backup files'
-	@echo  '  distclean   - mrproper + remove editor backup and patch files'
+	@echo  '  clean           - Remove most generated files but keep the config'
+	@echo  '  mrproper        - Remove all generated files + config + various backup files'
+	@echo  '  distclean       - mrproper + remove editor backup and patch files'
 	@echo  ''
 	@echo  'Configuration targets:'
 	@$(MAKE) -f $(srctree)/scripts/kconfig/Makefile help
@@ -778,7 +778,7 @@ help:
 	@echo  '  dir/file.lst    - Build specified mixed source/assembly target only'
 	@echo  '                    (requires a recent binutils and recent build (System.map))'
 	@echo  '  kernelversion   - Output the version stored in Makefile (use with make -s)'
-	 echo  ''
+	@echo  ''
 	@echo  'Static analysers'
 	@echo  '  includecheck    - Check for duplicate included header files'
 	@echo  '  headerdep       - Detect inclusion cycles in headers'
