@@ -31,9 +31,9 @@ unexport GREP_OPTIONS
 # their own directory. If in some directory we have a dependency on
 # a file in another dir (which doesn't happen often, but it's often
 # unavoidable when linking the built-in.o targets which finally
-# turn into myapp), we will call a sub make in that other dir, and
-# after that we are sure that everything which is in that other dir
-# is now up to date.
+# turn into the application), we will call a sub make in that other 
+# dir, and after that we are sure that everything which is in that 
+# other dir is now up to date.
 #
 # The only cases where we need to modify files which have global
 # effects are thus separated out and done before the recursive
@@ -261,12 +261,12 @@ NOSTDINC_FLAGS =
 CFLAGS_KERNEL  =
 AFLAGS_KERNEL  =
 
-# Use MYAPPINCLUDE when you must reference the include/ directory.
+# Use APPINCLUDE when you must reference the include/ directory.
 # Needed to be compatible with the O= option
-MYAPPINCLUDE := $(if $(KBUILD_SRC), -I$(srctree)/include) \
-               -Iinclude -include include/generated/autoconf.h
+APPINCLUDE      := $(if $(KBUILD_SRC), -I$(srctree)/include) \
+                   -Iinclude -include include/generated/autoconf.h
 
-KBUILD_CPPFLAGS := -D__MYAPP__
+KBUILD_CPPFLAGS := -D__APP__
 
 KBUILD_CFLAGS   := -Wall \
                    -Werror \
@@ -297,7 +297,7 @@ export CPP AR NM STRIP OBJCOPY OBJDUMP
 export MAKE AWK PERL PYTHON
 export HOSTCXX HOSTCXXFLAGS CHECK CHECKFLAGS
 
-export KBUILD_CPPFLAGS NOSTDINC_FLAGS MYAPPINCLUDE OBJCOPYFLAGS LDFLAGS
+export KBUILD_CPPFLAGS NOSTDINC_FLAGS APPINCLUDE OBJCOPYFLAGS LDFLAGS
 export KBUILD_CFLAGS CFLAGS_KERNEL KBUILD_CXXFLAGS
 export KBUILD_AFLAGS AFLAGS_KERNEL
 export KBUILD_AFLAGS_KERNEL KBUILD_CFLAGS_KERNEL
@@ -405,8 +405,8 @@ config: scripts_basic outputmakefile FORCE
 
 else
 # ===========================================================================
-# Build targets only - this includes myapp, arch specific targets, clean
-# targets and others. In general all targets except *config targets.
+# Build targets only - this includes the application, arch specific targets, 
+# clean targets and others. In general all targets except *config targets.
 
 # Additional helpers built in scripts/
 # Carefully list dependencies so we do not try to build scripts twice
@@ -442,8 +442,8 @@ endif # $(dot-config)
 # The all: target is the default when no target is given on the
 # command line.
 # This allow a user to issue only 'make' to build the application
-# Defaults to myapp, but the arch makefile usually adds further targets
-all: myapp
+# Defaults to app, but the arch makefile usually adds further targets
+all: application
 
 # The arch Makefile can set ARCH_{CPP,A,C}FLAGS to override the default
 # values of the respective KBUILD_* variables
@@ -596,7 +596,7 @@ KBUILD_CFLAGS   += $(ARCH_CFLAGS)   $(KCFLAGS)
 # set in the environment
 # Also any assignments in arch/$(ARCH)/Makefile take precedence over
 # this default value
-export KBUILD_IMAGE ?= myapp
+export KBUILD_IMAGE ?= application
 
 #
 # INSTALL_PATH specifies where to place the updated kernel and system map
@@ -607,30 +607,32 @@ export INSTALL_PATH ?= ./install
 objs-y := main
 libs-y := lib
 
-myapp-dirs := $(objs-y) $(libs-y)
-myapp-objs := $(patsubst %,%/built-in.o, $(objs-y))
-myapp-libs := $(patsubst %,%/lib.a, $(libs-y))
-myapp-all  := $(myapp-objs) $(myapp-libs)
+app-dirs := $(objs-y) $(libs-y)
+app-objs := $(patsubst %,%/built-in.o, $(objs-y))
+app-libs := $(patsubst %,%/lib.a, $(libs-y))
+app-all  := $(app-objs) $(app-libs)
 
-quiet_cmd_myapp = LD      $@
-      cmd_myapp = $(CC) $(LDFLAGS) -o $@                          \
-      -Wl,--start-group $(myapp-libs) $(myapp-objs) -Wl,--end-group
+quiet_cmd_app = LD      $@
+      cmd_app = $(CC) $(LDFLAGS) -o $@                          \
+      -Wl,--start-group $(app-libs) $(app-objs) -Wl,--end-group
 
-myapp: $(myapp-all) FORCE
-	+$(call if_changed,myapp)
+application: $(app-all) FORCE
+	+$(call if_changed,app)
+
+app: application
 
 # The actual objects are generated when descending,
 # make sure no implicit rule kicks in
-$(sort $(myapp-all)): $(myapp-dirs) ;
+$(sort $(app-all)): $(app-dirs) ;
 
-# Handle descending into subdirectories listed in $(myapp-dirs)
+# Handle descending into subdirectories listed in $(app-dirs)
 # Preset locale variables to speed up the build process. Limit locale
 # tweaks to this spot to avoid wrong language settings when running
 # make menuconfig etc.
 # Error messages still appears in the original language
 
-PHONY += $(myapp-dirs)
-$(myapp-dirs): prepare scripts
+PHONY += $(app-dirs)
+$(app-dirs): prepare scripts
 	$(Q)$(MAKE) $(build)=$@
 
 # Things we need to do before we recursively start building the application
@@ -674,9 +676,9 @@ prepare: prepare0
 # needs to be updated, so this check is forced on all builds
 
 define filechk_version.h
-	(echo \#define MYAPP_VERSION_CODE $(shell                         \
+	(echo \#define APP_VERSION_CODE $(shell                         \
 	expr $(VERSION) \* 65536 + 0$(PATCHLEVEL) \* 256 + 0$(SUBLEVEL)); \
-	echo '#define MYAPP_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))';)
+	echo '#define APP_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))';)
 endef
 
 $(version_h): $(srctree)/Makefile FORCE
@@ -697,7 +699,7 @@ headerdep:
 
 # Directories & files removed with 'make clean'
 CLEAN_DIRS  +=
-CLEAN_FILES += myapp
+CLEAN_FILES += application
 
 # Directories & files removed with 'make mrproper'
 MRPROPER_DIRS  += include/config include/generated .tmp_objdiff
@@ -708,7 +710,7 @@ MRPROPER_FILES += .config .config.old .version .old_version \
 #
 clean: rm-dirs  := $(CLEAN_DIRS)
 clean: rm-files := $(CLEAN_FILES)
-clean-dirs      := $(addprefix _clean_, . $(myapp-dirs))
+clean-dirs      := $(addprefix _clean_, . $(app-dirs))
 
 PHONY += $(clean-dirs) clean archclean
 $(clean-dirs):
@@ -767,7 +769,7 @@ help:
 	@echo  ''
 	@echo  'Other generic targets:'
 	@echo  '  all             - Build all targets marked with [*]'
-	@echo  '* myapp           - Build the application'
+	@echo  '* app             - Build the application'
 	@echo  '  dir/            - Build all files in dir and below'
 	@echo  '  dir/file.[ois]  - Build specified target only'
 	@echo  '  dir/file.lst    - Build specified mixed source/assembly target only'

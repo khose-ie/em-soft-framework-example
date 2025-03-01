@@ -63,7 +63,7 @@ First configure it, then just call make to build it.
         make menconfig # Create the ".config" file
         make           # Build the application
 
-These steps generate a small executable `myapp`,
+These steps generate a small executable `application`,
 which just print some messages to the console.
 
 You can save default configurations into the `configs/` directory.
@@ -101,7 +101,7 @@ Eventually also
 
 - Kbuild
 
-To get a starting point, just search for the string `myapp` in all Makefiles 
+To get a starting point, just search for the string `app` in all Makefiles 
 and Kconfig files. As a first task, replace these strings with your own 
 application name.
 
