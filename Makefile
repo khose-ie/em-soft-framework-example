@@ -243,6 +243,7 @@ include scripts/Kbuild.include
 AS      = $(CROSS_COMPILE)as
 LD      = $(CROSS_COMPILE)ld
 CC      = $(CROSS_COMPILE)gcc
+CXX     = $(CROSS_COMPILE)g++
 CPP     = $(CC) -E
 AR      = $(CROSS_COMPILE)ar
 NM      = $(CROSS_COMPILE)nm
@@ -277,6 +278,15 @@ KBUILD_CFLAGS := -Wall \
                  -fno-strict-aliasing \
                  -std=gnu89
 
+KBUILD_CXXFLAGS := -Wall \
+                   -Werror \
+                   -Wundef \
+                   -fno-common \
+                   -fno-exceptions \
+                   -fno-strict-aliasing \
+                   -fno-rtti \
+                   -std=c++14
+
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS        := -D__ASSEMBLY__
@@ -284,13 +294,13 @@ KBUILD_AFLAGS        := -D__ASSEMBLY__
 KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(SUBLEVEL)))$(EXTRAVERSION)
 
 export VERSION PATCHLEVEL SUBLEVEL KERNELVERSION
-export ARCH CONFIG_SHELL HOSTCC HOSTCFLAGS CROSS_COMPILE AS LD CC
+export ARCH CONFIG_SHELL HOSTCC HOSTCFLAGS CROSS_COMPILE AS LD CC CXX
 export CPP AR NM STRIP OBJCOPY OBJDUMP
 export MAKE AWK PERL PYTHON
 export HOSTCXX HOSTCXXFLAGS CHECK CHECKFLAGS
 
 export KBUILD_CPPFLAGS NOSTDINC_FLAGS MYAPPINCLUDE OBJCOPYFLAGS LDFLAGS
-export KBUILD_CFLAGS CFLAGS_KERNEL
+export KBUILD_CFLAGS CFLAGS_KERNEL KBUILD_CXXFLAGS
 export KBUILD_AFLAGS AFLAGS_KERNEL
 export KBUILD_AFLAGS_KERNEL KBUILD_CFLAGS_KERNEL
 export KBUILD_ARFLAGS
@@ -448,67 +458,88 @@ KBUILD_CFLAGS   += $(call cc-option,-fno-delete-null-pointer-checks,)
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS   += -Os $(call cc-disable-warning,maybe-uninitialized,)
+KBUILD_CXXFLAGS += -Os $(call cc-disable-warning,maybe-uninitialized,)
 else
 ifdef CONFIG_PROFILE_ALL_BRANCHES
 KBUILD_CFLAGS   += -O2 $(call cc-disable-warning,maybe-uninitialized,)
+KBUILD_CXXFLAGS += -O2 $(call cc-disable-warning,maybe-uninitialized,)
 else
 KBUILD_CFLAGS   += -O2
+KBUILD_CXXFLAGS += -O2
 endif
 endif
 
 # Tell gcc to never replace conditional load with a non-conditional one
 KBUILD_CFLAGS   += $(call cc-option,--param=allow-store-data-races=0)
+KBUILD_CXXFLAGS += $(call cc-option,--param=allow-store-data-races=0)
 
 ifeq ($(cc-name),clang)
 KBUILD_CPPFLAGS += $(call cc-option,-Qunused-arguments,)
 KBUILD_CPPFLAGS += $(call cc-option,-Wno-unknown-warning-option,)
 
 KBUILD_CFLAGS   += $(call cc-disable-warning, unused-variable)
+KBUILD_CXXFLAGS += $(call cc-disable-warning, unused-variable)
 KBUILD_CFLAGS   += $(call cc-disable-warning, format-invalid-specifier)
+KBUILD_CXXFLAGS += $(call cc-disable-warning, format-invalid-specifier)
 KBUILD_CFLAGS   += $(call cc-disable-warning, gnu)
+KBUILD_CXXFLAGS += $(call cc-disable-warning, gnu)
 # Quiet clang warning: comparison of unsigned expression < 0 is always false
 KBUILD_CFLAGS   += $(call cc-disable-warning, tautological-compare)
+KBUILD_CXXFLAGS += $(call cc-disable-warning, tautological-compare)
 # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
 # source of a reference will be _MergedGlobals and not on of the whitelisted names.
 # See modpost pattern 2
 KBUILD_CFLAGS   += $(call cc-option, -mno-global-merge,)
+KBUILD_CXXFLAGS += $(call cc-option, -mno-global-merge,)
 KBUILD_CFLAGS   += $(call cc-option, -fcatch-undefined-behavior)
+KBUILD_CXXFLAGS += $(call cc-option, -fcatch-undefined-behavior)
 else
 
 # These warnings generated too much noise in a regular build.
 # Use make W=1 to enable them (see scripts/Makefile.build)
 KBUILD_CFLAGS   += $(call cc-disable-warning, unused-but-set-variable)
+KBUILD_CXXFLAGS += $(call cc-disable-warning, unused-but-set-variable)
 KBUILD_CFLAGS   += $(call cc-disable-warning, unused-const-variable)
+KBUILD_CXXFLAGS += $(call cc-disable-warning, unused-const-variable)
 endif
 
 ifdef CONFIG_FRAME_POINTER
 KBUILD_CFLAGS   += -fno-omit-frame-pointer -fno-optimize-sibling-calls
+KBUILD_CXXFLAGS += -fno-omit-frame-pointer -fno-optimize-sibling-calls
 else
 KBUILD_CFLAGS   += -fomit-frame-pointer
+KBUILD_CXXFLAGS += -fomit-frame-pointer
 endif
 
 KBUILD_CFLAGS   += $(call cc-option, -fno-var-tracking-assignments)
+KBUILD_CXXFLAGS += $(call cc-option, -fno-var-tracking-assignments)
 
 ifdef CONFIG_DEBUG_INFO
 ifdef CONFIG_DEBUG_INFO_SPLIT
 KBUILD_CFLAGS   += $(call cc-option, -gsplit-dwarf, -g)
+KBUILD_CXXFLAGS += $(call cc-option, -gsplit-dwarf, -g)
 else
 KBUILD_CFLAGS   += -g
+KBUILD_CXXFLAGS += -g
 endif
 KBUILD_AFLAGS   += -Wa,-gdwarf-2
 endif
 ifdef CONFIG_DEBUG_INFO_DWARF4
 KBUILD_CFLAGS   += $(call cc-option, -gdwarf-4,)
+KBUILD_CXXFLAGS += $(call cc-option, -gdwarf-4,)
 endif
 
 ifdef CONFIG_DEBUG_INFO_REDUCED
 KBUILD_CFLAGS   += $(call cc-option, -femit-struct-debug-baseonly) \
+                   $(call cc-option,-fno-var-tracking)
+KBUILD_CXXFLAGS += $(call cc-option, -femit-struct-debug-baseonly) \
                    $(call cc-option,-fno-var-tracking)
 endif
 
 # We trigger additional mismatches with less inlining
 ifdef CONFIG_DEBUG_SECTION_MISMATCH
 KBUILD_CFLAGS   += $(call cc-option, -fno-inline-functions-called-once)
+KBUILD_CXXFLAGS += $(call cc-option, -fno-inline-functions-called-once)
 endif
 
 # arch Makefile may override CC so keep this after arch Makefile is included
@@ -523,9 +554,11 @@ KBUILD_CFLAGS   += $(call cc-disable-warning, pointer-sign)
 
 # disable invalid "can't wrap" optimizations for signed / pointers
 KBUILD_CFLAGS   += $(call cc-option,-fno-strict-overflow)
+KBUILD_CXXFLAGS += $(call cc-option,-fno-strict-overflow)
 
 # conserve stack if available
 KBUILD_CFLAGS   += $(call cc-option,-fconserve-stack)
+KBUILD_CXXFLAGS += $(call cc-option,-fconserve-stack)
 
 # disallow errors like 'EXPORT_GPL(foo);' with missing header
 KBUILD_CFLAGS   += $(call cc-option,-Werror=implicit-int)
@@ -535,9 +568,13 @@ KBUILD_CFLAGS   += $(call cc-option,-Werror=strict-prototypes)
 
 # Prohibit date/time macros, which would make the build non-deterministic
 KBUILD_CFLAGS   += $(call cc-option,-Werror=date-time)
+KBUILD_CXXFLAGS += $(call cc-option,-Werror=date-time)
 
 # enforce correct pointer usage
 KBUILD_CFLAGS   += $(call cc-option,-Werror=incompatible-pointer-types)
+
+# Disable C++ standard library
+KBUILD_CXXFLAGS += $(call cc-option,-nostdlib++)
 
 # use the deterministic mode of AR if available
 KBUILD_ARFLAGS := $(call ar-option,D)
