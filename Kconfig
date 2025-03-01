@@ -56,51 +56,59 @@ endchoice
 config DEBUG_INFO
 	bool "Compile the application with debug info"
 	help
-          If you say Y here the resulting application binary will include
-	  debugging info resulting in a larger application binary.
-	  This adds debug symbols to the application (gcc -g), and
-	  is needed if you want to debug your application with gdb.
-	  Say Y here only if you plan to debug the application.
+		If you say Y here the resulting application binary will include
+		debugging info resulting in a larger application binary.
+		This adds debug symbols to the application (gcc -g), and
+		is needed if you want to debug your application with gdb.
+		Say Y here only if you plan to debug the application.
 
-	  If unsure, say N.
+		If unsure, say N.
 
 config DEBUG_INFO_REDUCED
 	bool "Reduce debugging information"
 	depends on DEBUG_INFO
 	help
-	  If you say Y here gcc is instructed to generate less debugging
-	  information for structure types. This means that tools that
-	  need full debugging information (like gdb or systemtap) won't
-	  be happy. But if you merely need debugging information to
-	  resolve line numbers there is no loss. Advantage is that
-	  build directory object sizes shrink dramatically over a full
-	  DEBUG_INFO build and compile times are reduced too.
-	  Only works with newer gcc versions.
+		If you say Y here gcc is instructed to generate less debugging
+		information for structure types. This means that tools that
+		need full debugging information (like gdb or systemtap) won't
+		be happy. But if you merely need debugging information to
+		resolve line numbers there is no loss. Advantage is that
+		build directory object sizes shrink dramatically over a full
+		DEBUG_INFO build and compile times are reduced too.
+		Only works with newer gcc versions.
 
 config DEBUG_INFO_SPLIT
 	bool "Produce split debuginfo in .dwo files"
 	depends on DEBUG_INFO
 	help
-	  Generate debug info into separate .dwo files. This significantly
-	  reduces the build directory size for builds with DEBUG_INFO,
-	  because it stores the information only once on disk in .dwo
-	  files instead of multiple times in object files and executables.
-	  In addition the debug information is also compressed.
+		Generate debug info into separate .dwo files. This significantly
+		reduces the build directory size for builds with DEBUG_INFO,
+		because it stores the information only once on disk in .dwo
+		files instead of multiple times in object files and executables.
+		In addition the debug information is also compressed.
 
-	  Requires recent gcc (4.7+) and recent gdb/binutils.
-	  Any tool that packages or reads debug information would need
-	  to know about the .dwo files and include them.
-	  Incompatible with older versions of ccache.
+		Requires recent gcc (4.7+) and recent gdb/binutils.
+		Any tool that packages or reads debug information would need
+		to know about the .dwo files and include them.
+		Incompatible with older versions of ccache.
+
+config DEBUG_INFO_DWARF2
+	bool "Generate dwarf2 debuginfo"
+	depends on DEBUG_INFO
+	help
+		Generate dwarf2 debug info. This requires recent versions
+		of gcc and gdb. It makes the debug information larger.
+		But it significantly improves the success of resolving
+		variables in gdb on optimized code.
 
 config DEBUG_INFO_DWARF4
 	bool "Generate dwarf4 debuginfo"
 	depends on DEBUG_INFO
 	help
-	  Generate dwarf4 debug info. This requires recent versions
-	  of gcc and gdb. It makes the debug information larger.
-	  But it significantly improves the success of resolving
-	  variables in gdb on optimized code.
-
+		Generate dwarf4 debug info. This requires recent versions
+		of gcc and gdb. It makes the debug information larger.
+		But it significantly improves the success of resolving
+		variables in gdb on optimized code.
 
 endmenu
 

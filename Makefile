@@ -525,16 +525,23 @@ KBUILD_CXXFLAGS += $(call cc-option, -fno-var-tracking-assignments)
 endif
 endif
 
+# Configurate the debug information and settings.
 ifdef CONFIG_DEBUG_INFO
-ifdef CONFIG_DEBUG_INFO_SPLIT
-KBUILD_CFLAGS   += $(call cc-option, -gsplit-dwarf, -g)
-KBUILD_CXXFLAGS += $(call cc-option, -gsplit-dwarf, -g)
-else
+
 KBUILD_CFLAGS   += -g
 KBUILD_CXXFLAGS += -g
-endif
 KBUILD_AFLAGS   += -Wa,-gdwarf-2
+
+ifdef CONFIG_DEBUG_INFO_SPLIT
+KBUILD_CFLAGS   += $(call cc-option, -gsplit-dwarf)
+KBUILD_CXXFLAGS += $(call cc-option, -gsplit-dwarf)
 endif
+
+ifdef CONFIG_DEBUG_INFO_DWARF2
+KBUILD_CFLAGS   += $(call cc-option, -gdwarf-2,)
+KBUILD_CXXFLAGS += $(call cc-option, -gdwarf-2,)
+endif
+
 ifdef CONFIG_DEBUG_INFO_DWARF4
 KBUILD_CFLAGS   += $(call cc-option, -gdwarf-4,)
 KBUILD_CXXFLAGS += $(call cc-option, -gdwarf-4,)
@@ -546,6 +553,8 @@ KBUILD_CFLAGS   += $(call cc-option, -femit-struct-debug-baseonly) \
 KBUILD_CXXFLAGS += $(call cc-option, -femit-struct-debug-baseonly) \
                    $(call cc-option,-fno-var-tracking)
 endif
+
+endif # CONFIG_DEBUG_INFO
 
 # We trigger additional mismatches with less inlining
 ifdef CONFIG_DEBUG_SECTION_MISMATCH
@@ -736,7 +745,7 @@ clean: $(clean-dirs)
 	$(call cmd,rmfiles)
 	@find . $(RCS_FIND_IGNORE) \
 		\( -name '*.[oas]' -o -name '.*.cmd' \
-		-o -name '.*.d' -o -name '.*.tmp' \
+		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.dwo' \
 		-o -name '.tmp_*.o.*' \
 		-o -name '*.gcno' \) -type f -print | xargs rm -f
 
