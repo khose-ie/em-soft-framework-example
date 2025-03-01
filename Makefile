@@ -635,13 +635,17 @@ app-libs := $(patsubst %,%/lib.a, $(libs-y))
 app-all  := $(app-objs) $(app-libs)
 
 quiet_cmd_app = LD      $@
-      cmd_app = $(CC) $(LDFLAGS) -o $@ -Wl,--start-group $(app-libs) $(app-objs) -Wl,--end-group    && \
-	            echo "============================================================"                 && \
-	            $(OBJSIZE) $@                                                                       && \
+      cmd_app = $(CC) $(LDFLAGS) -o $@ -Wl,--start-group $(app-libs) $(app-objs) -Wl,--end-group  && \
 				$(OBJCOPY) -O binary -S $@ $@.bin
+
+     cmd_size = echo "============================================================"  && \
+	            $(OBJSIZE) $@                                                        && \
+				echo "============================================================"
+
 
 application: $(app-all) FORCE
 	+$(call if_changed,app)
+	+$(call cmd,size)
 
 app: application
 
