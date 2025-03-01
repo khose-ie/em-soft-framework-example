@@ -627,7 +627,7 @@ export INSTALL_PATH ?= ./install
 
 
 objs-y := main
-libs-y := lib
+libs-y := 
 
 app-dirs := $(objs-y) $(libs-y)
 app-objs := $(patsubst %,%/built-in.o, $(objs-y))
