@@ -1,0 +1,24 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+
+{
+    "name": "Ubuntu",
+    "image": "khose/dev-container-arm:latest",
+
+    "remoteUser": "root",
+    "remoteEnv": {
+        "HTTP_PROXY": "http://host.docker.internal:1087",
+        "HTTPS_PROXY": "http://host.docker.internal:1087"
+    },
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.makefile-tools",
+                "ms-ceintl.vscode-language-pack-zh-hans",
+                "gxl.git-graph-3"
+            ]
+        }
+    }
+}
