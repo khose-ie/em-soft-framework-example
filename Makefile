@@ -268,15 +268,13 @@ MYAPPINCLUDE := $(if $(KBUILD_SRC), -I$(srctree)/include) \
 
 KBUILD_CPPFLAGS := -D__MYAPP__
 
-KBUILD_CFLAGS := -Wall \
-                 -Wundef \
-                 -Wstrict-prototypes \
-                 -Wno-trigraphs \
-                 -Wno-format-security \
-                 -Werror-implicit-function-declaration \
-                 -fno-common \
-                 -fno-strict-aliasing \
-                 -std=gnu89
+KBUILD_CFLAGS   := -Wall \
+                   -Werror \
+                   -Wundef \
+                   -Wstrict-prototypes \
+                   -fno-common \
+                   -fno-strict-aliasing \
+                   -std=c11
 
 KBUILD_CXXFLAGS := -Wall \
                    -Werror \
