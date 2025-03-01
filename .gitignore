@@ -147,5 +147,10 @@ Objects/
 #
 /application
 
+#
+# Doxygen generated document files
+#
+docs/doxygen
+
 !.gitignore
 !.gitattributes
