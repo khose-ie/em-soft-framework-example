@@ -111,13 +111,3 @@ config DEBUG_INFO_DWARF4
 		variables in gdb on optimized code.
 
 endmenu
-
-
-source "main/Kconfig"
-
-source "lib/Kconfig"
-
-
-
-
-
