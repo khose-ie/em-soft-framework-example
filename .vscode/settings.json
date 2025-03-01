@@ -1,0 +1,10 @@
+{
+    "explorer.excludeGitIgnore": true,
+    "files.associations": {
+        ".config": "makefile",
+        ".doxyfile": "ini",
+        "*.h": "c",
+        "*.hpp": "cpp",
+        "Kconfig": "makefile"
+    }
+}

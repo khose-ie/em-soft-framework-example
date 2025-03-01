@@ -1,0 +1,36 @@
+{
+    "version": "2.0.0",
+    "inputs": [
+        {
+            "id": "defConfig",
+            "type": "pickString",
+            "description": "Please select the defined configuration file:",
+            "options": [
+                "example"
+            ]
+        }
+    ],
+    "tasks": [
+        {
+            "label": "Make Configuration",
+            "type": "shell",
+            "detail": "Configurate with defined files.",
+            "command": "make ${input:defConfig}_defconfig",
+            "group": "build"
+        },
+        {
+            "label": "Make",
+            "type": "shell",
+            "detail": "Compile the software image.",
+            "command": "make -j",
+            "group": "build"
+        },
+        {
+            "label": "Make Clean",
+            "type": "shell",
+            "detail": "Clean all object files.",
+            "command": "make clean",
+            "group": "build"
+        }
+    ]
+}
