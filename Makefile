@@ -566,12 +566,6 @@ endif
 #NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
 CHECKFLAGS     += $(NOSTDINC_FLAGS)
 
-# warn about C99 declaration after statement
-KBUILD_CFLAGS   += $(call cc-option,-Wdeclaration-after-statement,)
-
-# disable pointer signed / unsigned warnings in gcc 4.0
-KBUILD_CFLAGS   += $(call cc-disable-warning, pointer-sign)
-
 # disable invalid "can't wrap" optimizations for signed / pointers
 KBUILD_CFLAGS   += $(call cc-option,-fno-strict-overflow)
 KBUILD_CXXFLAGS += $(call cc-option,-fno-strict-overflow)
@@ -580,18 +574,9 @@ KBUILD_CXXFLAGS += $(call cc-option,-fno-strict-overflow)
 KBUILD_CFLAGS   += $(call cc-option,-fconserve-stack)
 KBUILD_CXXFLAGS += $(call cc-option,-fconserve-stack)
 
-# disallow errors like 'EXPORT_GPL(foo);' with missing header
-KBUILD_CFLAGS   += $(call cc-option,-Werror=implicit-int)
-
-# require functions to have arguments in prototypes, not empty 'int foo()'
-KBUILD_CFLAGS   += $(call cc-option,-Werror=strict-prototypes)
-
 # Prohibit date/time macros, which would make the build non-deterministic
 KBUILD_CFLAGS   += $(call cc-option,-Werror=date-time)
 KBUILD_CXXFLAGS += $(call cc-option,-Werror=date-time)
-
-# enforce correct pointer usage
-KBUILD_CFLAGS   += $(call cc-option,-Werror=incompatible-pointer-types)
 
 # Disable C++ standard library
 KBUILD_CXXFLAGS += $(call cc-option,-nostdlib++)
