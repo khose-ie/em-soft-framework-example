@@ -1,133 +1,51 @@
-kbuild-template
-===============
+# Embedded Software Framework
 
-This is a project template, that uses the Linux Kernel build system Kbuild.
+This repositoty is used for the vast embedded software developers.
 
-Kbuild was originially developed to be used with the Linux Kernel.
-It implements a powerfull configuration and build infrastructure that
-allowes you to build a project with only the sources, that are really
-needed to fit your configuration.
+## What it is
 
-But Kbuild can not only be used along with the Linux kernel. Lots of other
-projects use the Kbuild system as well. A few famos examples:
+It provides a template framework to create your code with the out-of-box settings of kbuild and many other famous and nessary tools in the embedded software development.
+You can easily use it as the basic framework for your project and code especially there are many engineers who has different styles in your project.
 
-- buildroot        -- https://buildroot.org/
-- zephyr           -- https://www.zephyrproject.org/
-- U-Boot           -- http://www.denx.de/wiki/U-Boot
+## How to use it
 
+First of all, you need to click the button "Use the template" at the top right corner to create your own repository bases on this template, or you can clone this repository, they are same.
 
-This project showes you that Kbuild is a makefile framework for writing 
-simple makefiles for complex and configurable tasks that you can easily 
-use for your own purposes.
+> Using template or clone the code may keep the history commits of this repository, and you may don't want these commits pollute your new project.
+> Another way is that you can download with the zip file, and it will don't include any git information.
 
-How it works
-------------
+Next step, you can do some customization.
 
-The top Makefile reads the .config file, which comes from the application
-configuration process.
+**Clang-Format**
 
-The top Makefile is responsible for building building the application
-It builds this goal by recursively descending into the subdirectories of
-the application source tree.
-The list of subdirectories which are visited depends upon the application
-configuration. The top Makefile can include several other Makefiles that
-supply function specific information to the top Makefile.
+The repository already contains a set of clang-format (`.clang-format`) and configuration templates.
+If you want to use them, you can customize them and use your favorite configurations.
 
-Each subdirectory has a kbuild Makefile which carries out the commands
-passed down from above. The kbuild Makefile uses information from the
-.config file to construct various file lists used by kbuild to build
-any built-in targets.
+**Doxygen**
 
-scripts/Makefile.* contains all the definitions/rules etc. that
-are used to build the application based on the kbuild makefiles.
+The repository already contains a set of doxygen (`.doxyfile`) configuration templates.
+If you want to enable doxygen, please remember to modify the `PROJECT-NAME` option in the  `.doxyfile`. It is now empty and you should change it to the loud name of your new project.
 
+**Devcontainer**
 
-Sample project
---------------
+If you want to use a container as the development environment, you can modify the files in the `.devcontainer` folder according to the actual situation.
 
-This project combines a pretty simple application with the Kbuild environment.
-The Kbuild system itself was copied from the Linux Kernel. Next, the Makefiles
-and scripts where simplified and most of the kernel specific rules and targets
-where removed or replaced by out own application specific targets.
+**VS Code**
 
-All changes to the Makefiles and scripts are logged in this git repository.
+The repository includes some configuration of VS Code and VS Code plugins.
+They are defined in folder `.vscode`.
+We have defined three sample tasks of VS Code to do the `make defconfig`, `make` and `make clean`, you can see them and run via `ctrl` + `shifp` + `B`.
 
+**Git**
 
-Building
---------
+I have tried my bese to define a complete git ignore file including most of all files which needs to be ignored in a C/C++ project.
+Please check the file `.gitignore`, if there are some omissions or mistakes, you can fix it.
 
-Building the sample application is quite simple. 
+I also defined a `.gitattributes` file and fixed the eol format with LF, if you work in Windows, you can also change it.
 
-First configure it, then just call make to build it.
+**Kbuild**
 
-        make menconfig # Create the ".config" file
-        make           # Build the application
+Last, and also the most importance, the repository intergrated a kbuild system, the build framework is being used in Linux kernel.
 
-These steps generate a small executable `application`,
-which just print some messages to the console.
-
-You can save default configurations into the `configs/` directory.
-There are two sample default configurations one with all options
-enabled (`all-y-defconfig`) and one with no option enabled (`all-n-defconfig`)
-
-You can configure the project with a default configuration by calling e.g.
-
-        make all-y-defconfig
-
-        
-The full list of configuration and build targets is available by:
-
-        make help
-
-
-How to use and modify this template for your own applications?
---------------------------------------------------------------
-
-The application sources can easily be replaced and extended by your 
-own files.
-
-Currently the sources are located in the following directories:
-
-- main/     -- Main application source
-- lib/      -- A sample logging library, that will be compiled into a .a file
-- include/  -- This directory holds all include files.
-
-All you need to to is to modify the following files, according to your needs:
-
-- Kconfig       in the top and all sub-directories
-- Makefile      in the top and all sub-directories
-
-Eventually also
-
-- Kbuild
-
-To get a starting point, just search for the string `app` in all Makefiles 
-and Kconfig files. As a first task, replace these strings with your own 
-application name.
-
-It should be quite obvious how to extend this example to your needs.
-
-You can add more subdirectories by adding to `objs-y` or `libs-y` variables
-of the top-level `Makefile`.
-
-In our sample, these variables are set to:
-
-        objs-y          := main
-        libs-y          := lib
-
-You can also add further sub-sub directories, as you like.
-
-
-
-Kbuild documentation
---------------------
-
-The original Kbuild documentation is located at
-
-Learn about the kconfig language:
-`Documentation/kbuild/kconfig-language.txt`.
-
-Learn how to write makefiles:
-`Documentation/kbuild/makefiles.txt`.
-
-This is the original documentation from the Linux Kernel
+> The kbuild system was transported by [Ole Reinhardt](https://github.com/olereinhardt) in repository [kbuild-template](https://github.com/embedded-it/kbuild-template).
+> Thanks for his work!

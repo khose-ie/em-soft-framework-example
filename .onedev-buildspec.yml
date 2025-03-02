@@ -4,7 +4,7 @@ jobs:
   steps:
   - !PushRepository
     name: Push to Remote
-    remoteUrl: https://github.com/khose-ie/mcu-code-template.git
+    remoteUrl: https://github.com/khose-ie/em-software-framework.git
     userName: khose-ie
     passwordSecret: GITHUB_TOKEN
     force: false
