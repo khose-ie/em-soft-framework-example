@@ -736,7 +736,7 @@ clean: $(clean-dirs)
 	@find . $(RCS_FIND_IGNORE) \
 		\( -name '*.[oa]' -o -name '.*.cmd' \
 		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.dwo' \
-		-o -name '.tmp_*.o.*' \
+		-o -name '.*.o.*' \
 		-o -name '*.gcno' \) -type f -print | xargs rm -f
 
 # mrproper - Delete all generated files, including .config

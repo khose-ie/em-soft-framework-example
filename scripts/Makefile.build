@@ -203,6 +203,10 @@ $(obj)/%.o: $(src)/%.cpp $(objtool_obj) FORCE
 	$(call cmd,force_checksrc)
 	$(call if_changed_rule,cc_o_cxx)
 
+$(obj)/%.o: $(src)/%.ld $(objtool_obj) FORCE
+	@cp -f $< .$(notdir $@).ld
+	@touch $@
+
 quiet_cmd_cc_lst_c = MKLST   $@
       cmd_cc_lst_c = $(CC) $(c_flags) -g -c -o $*.o $< && \
                      $(CONFIG_SHELL) $(srctree)/scripts/makelst $*.o \
