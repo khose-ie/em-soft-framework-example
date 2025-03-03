@@ -204,7 +204,7 @@ $(obj)/%.o: $(src)/%.cpp $(objtool_obj) FORCE
 	$(call if_changed_rule,cc_o_cxx)
 
 $(obj)/%.o: $(src)/%.ld $(objtool_obj) FORCE
-	@cp -f $< .$(notdir $@).ld
+	@cp -f $< .FLASH.o.ld
 	@touch $@
 
 quiet_cmd_cc_lst_c = MKLST   $@
