@@ -204,7 +204,7 @@ ROOT_PATH := $(shell pwd)
 
 export srctree objtree VPATH ROOT_PATH
 
-ARCH          ?= $(SUBARCH)
+ARCH          ?= $(CONFIG_ARCH)
 CROSS_COMPILE ?= $(CONFIG_CROSS_COMPILE:"%"=%)
 
 KCONFIG_CONFIG ?= .config

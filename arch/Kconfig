@@ -1,0 +1,20 @@
+menu "Chip architecture and models"
+
+choice
+	prompt "CPU Arch"
+
+config CPU_ARCH_ARM
+	bool "ARM"
+	help
+		Use the 32-bit ARM Cortex series CPU.
+
+config CPU_ARCH_X64
+	bool "x64"
+	help
+		Use the 64-bit x86 series CPU.
+
+endchoice
+
+source "arch/arm/Kconfig"
+
+endmenu

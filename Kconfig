@@ -4,29 +4,35 @@
 #
 mainmenu "MCU Code Configuration"
 
-#config SRCARCH
-#	string
-#	option env="SRCARCH"
+# Chip architecture and models
+source "arch/Kconfig"
 
-#source "arch/$SRCARCH/Kconfig"
+menu "Compile-time checks and options"
 
-
-menu "Compile-time checks and compiler options"
+config ARCH
+	string "Compile target arch"
+	default ""
+	default "arm" if CPU_ARCH_ARM
+	help
+		The CPU arch string. Same as running 'make ARCH=arm' but stored for
+		default make runs in this application build directory.
 
 config CROSS_COMPILE
 	string "Cross-compiler tool prefix"
+	default ""
+	default "arm-none-eabi-" if CPU_ARCH_ARM
 	help
-	  Same as running 'make CROSS_COMPILE=prefix-' but stored for
-	  default make runs in this application build directory.  You don't
-	  need to set this unless you want the configured application build
-	  directory to select the cross-compiler automatically.
+		Same as running 'make CROSS_COMPILE=prefix-' but stored for
+		default make runs in this application build directory.  You don't
+		need to set this unless you want the configured application build
+		directory to select the cross-compiler automatically.
 
 choice
 	prompt "Compiler Optimization Level"
 	default CC_OPTIMIZE_FOR_DEBUG
 
 config CC_OPTIMIZE_NONE
-	bool " Optimize none"
+	bool "Optimize none"
 	help
 		This options is used to tell compiler do not do any optimize, building
 		with the flag "-O0".

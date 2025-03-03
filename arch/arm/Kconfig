@@ -1,0 +1,12 @@
+choice
+	prompt "CPU Manufacturer"
+	depends on CPU_ARCH_ARM
+
+config CPU_MACH_ST
+	bool "STMicroelectronics"
+	help
+		Use the CPU module of STMicroelectronics.
+
+endchoice
+
+# source "arch/arm/mach-stm/Kconfig"
