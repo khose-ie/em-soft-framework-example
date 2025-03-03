@@ -622,16 +622,14 @@ app-all  := $(app-objs) $(app-libs)
 
 quiet_cmd_app = LD      $@
       cmd_app = $(CC) $(app-all) $(LDFLAGS) $(KBUILD_LDFLAGS) -o $@ -Wl,--gc-sections && \
-				$(OBJCOPY) -O binary -S $@ $@.bin
-
-     cmd_size = echo "============================================================"  && \
-	            $(OBJSIZE) $@                                                        && \
+				$(OBJCOPY) -O binary -S $@ $@.bin                                     && \
+                echo "============================================================"   && \
+	            $(OBJSIZE) $@                                                         && \
 				echo "============================================================"
 
 
 application: $(app-all) FORCE
 	+$(call if_changed,app)
-	+$(call cmd,size)
 
 app: application
 
