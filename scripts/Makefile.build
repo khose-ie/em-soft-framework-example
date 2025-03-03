@@ -183,6 +183,11 @@ define rule_as_o_S
 	$(cmd_objtool)
 endef
 
+define rule_as_o_s
+	$(call cmd_and_fixdep,as_o_s)                   \
+	$(cmd_objtool)
+endef
+
 # List module undefined symbols (or empty line if not enabled)
 ifdef CONFIG_TRIM_UNUSED_KSYMS
 cmd_undef_syms = $(NM) $@ | sed -n 's/^ \+U //p' | xargs echo
@@ -232,8 +237,11 @@ cmd_as_o_S       = $(CC) $(a_flags) -c -o $@ $<
 $(obj)/%.o: $(src)/%.S $(objtool_obj) FORCE
 	$(call if_changed_rule,as_o_S)
 
+quiet_cmd_as_o_s = AS $(quiet_modtag)  $@
+cmd_as_o_s       = $(CC) -x assembler-with-cpp $(a_flags) -c -o $@ $<
+
 $(obj)/%.o: $(src)/%.s $(objtool_obj) FORCE
-	$(call if_changed_rule,as_o_S)
+	$(call if_changed_rule,as_o_s)
 
 targets += $(real-objs-y) $(lib-y)
 targets += $(extra-y) $(MAKECMDGOALS) $(always)
