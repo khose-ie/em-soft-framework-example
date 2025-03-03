@@ -115,7 +115,7 @@ $(multi-objs-y:.o=.i)   : modname = $(modname-multi)
 $(multi-objs-y:.o=.s)   : modname = $(modname-multi)
 $(multi-objs-y:.o=.lst) : modname = $(modname-multi)
 
-quiet_cmd_cc_s_c = CC $(quiet_modtag)  $@
+quiet_cmd_cc_s_c = CC $(quiet_modtag)  $(shell echo $@ | sed 's|.*\(\.\./\)||g')
 cmd_cc_s_c       = $(CC) $(c_flags) $(DISABLE_LTO) -fverbose-asm -S -o $@ $<
 
 $(obj)/%.s: $(src)/%.c FORCE
@@ -131,7 +131,7 @@ $(obj)/%.i: $(src)/%.c FORCE
 # The C file is compiled and updated dependency information is generated.
 # (See cmd_cc_o_c + relevant part of rule_cc_o_c)
 
-quiet_cmd_cc_o_c = CC $(quiet_modtag)  $@
+quiet_cmd_cc_o_c = CC $(quiet_modtag)  $(shell echo $@ | sed 's|.*\(\.\./\)||g')
 
 cmd_cc_o_c = $(CC) $(c_flags) -c -o $@ $<
 
@@ -139,7 +139,7 @@ cmd_cc_o_c = $(CC) $(c_flags) -c -o $@ $<
 # The C++ file is compiled and updated dependency information is generated.
 # (See cmd_cc_o_cxx + relevant part of rule_cc_o_cxx)
 
-quiet_cmd_cc_o_cxx = CXX $(quiet_modtag) $@
+quiet_cmd_cc_o_cxx = CXX $(quiet_modtag) $(shell echo $@ | sed 's|.*\(\.\./\)||g')
 
 cmd_cc_o_cxx = $(CXX) $(cxx_flags) -c -o $@ $<
 
