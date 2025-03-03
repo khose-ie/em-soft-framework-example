@@ -199,9 +199,10 @@ objtree := .
 src     := $(srctree)
 obj     := $(objtree)
 
-VPATH := $(srctree)
+VPATH     := $(srctree)
+ROOT_PATH := $(shell pwd)
 
-export srctree objtree VPATH
+export srctree objtree VPATH ROOT_PATH
 
 ARCH          ?= $(SUBARCH)
 CROSS_COMPILE ?= $(CONFIG_CROSS_COMPILE:"%"=%)
