@@ -621,7 +621,7 @@ app-libs := $(patsubst %,%/lib.a, $(libs-y))
 app-all  := $(app-objs) $(app-libs)
 
 quiet_cmd_app = LD      $@
-      cmd_app = $(CC) $(LDFLAGS) $(KBUILD_LDFLAGS) -o $@ -Wl,--start-group $(app-libs) $(app-objs) -Wl,--end-group  && \
+      cmd_app = $(CC) $(app-all) $(LDFLAGS) $(KBUILD_LDFLAGS) -o $@ -Wl,--gc-sections && \
 				$(OBJCOPY) -O binary -S $@ $@.bin
 
      cmd_size = echo "============================================================"  && \
