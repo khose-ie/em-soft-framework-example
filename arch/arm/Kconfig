@@ -9,4 +9,4 @@ config CPU_MACH_ST
 
 endchoice
 
-# source "arch/arm/mach-stm/Kconfig"
+source "arch/arm/mach-stm/Kconfig"
