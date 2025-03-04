@@ -1,0 +1,15 @@
+[submodule "cmsis-core"]
+	path = libs/STMicroelectronics/cmsis/cmsis-core
+	url = https://github.com/STMicroelectronics/cmsis-core.git
+[submodule "cmsis-device-h5"]
+	path = libs/STMicroelectronics/cmsis/cmsis-device-h5
+	url = https://github.com/STMicroelectronics/cmsis-device-h5.git
+[submodule "stm32h5xx-hal-driver"]
+	path = libs/STMicroelectronics/driver/stm32h5xx-hal-driver
+	url = https://github.com/STMicroelectronics/stm32h5xx-hal-driver.git
+[submodule "stm32-bsp-common"]
+	path = libs/STMicroelectronics/bsp/common
+	url = https://github.com/STMicroelectronics/stm32-bsp-common.git
+[submodule "stm32-bsp-stm32h5xx-nucleo"]
+	path = libs/STMicroelectronics/bsp/stm32h5xx-nucleo
+	url = https://github.com/STMicroelectronics/stm32h5xx-nucleo-bsp.git
