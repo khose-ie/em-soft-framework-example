@@ -612,7 +612,7 @@ export KBUILD_IMAGE ?= application
 export INSTALL_PATH ?= ./install
 
 
-objs-y := main
+objs-y := platform
 libs-y := 
 
 app-dirs := $(objs-y) $(libs-y)
